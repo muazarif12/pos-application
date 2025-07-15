@@ -12,7 +12,9 @@ app.use(express.json());  // to pass json encoded bodies // express.json() is a 
 // header matches application/json) and makes the parsed data available on req.body.
 
 app.use(express.urlencoded({extended: false})); //to pass url encoded bodies set to false
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 
 //code for connection to MongoDB
 
