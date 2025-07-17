@@ -1,4 +1,5 @@
 import { HydratedDocument } from "mongoose";
+import  { type JWTPayload } from "jose";
 
 export enum UserType{
     ADMIN = 'admin',
@@ -14,10 +15,11 @@ export interface IUser {
     comparePassword(candidatePassword:string):Promise<boolean>;
 }
 
-export interface DecodedJWT {
+export interface DecodedJWT extends JWTPayload {
   email: string;
   createdAt: Date;
   userType: UserType;
+  exp: number;
 }
 
 declare global {

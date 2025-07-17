@@ -13,7 +13,8 @@ app.use(express.json());  // to pass json encoded bodies // express.json() is a 
 
 app.use(express.urlencoded({extended: false})); //to pass url encoded bodies set to false
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:3000',
+    credentials: true,
 }));
 
 //code for connection to MongoDB
