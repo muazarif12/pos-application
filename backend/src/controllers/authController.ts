@@ -1,7 +1,6 @@
 import { User } from "@/models/user.model";
 import { Router, Request, Response } from 'express';
-import { UserDocument, IUser, UserType } from "@/interfaces/IUser";
-import jwt from "jsonwebtoken";
+import { UserDocument, UserType } from "@/interfaces/IUser";
 import { SignJWT } from "jose";
 
 

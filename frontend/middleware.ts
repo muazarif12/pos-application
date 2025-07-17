@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { jwtVerify } from 'jose';
 
-import { decodeToken } from "@/utils/auth";
-import jwt from "jsonwebtoken";
 export async function middleware(request: NextRequest) {
     console.log('🔥 Middleware running for:', request.nextUrl.pathname);
 
