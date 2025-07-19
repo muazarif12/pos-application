@@ -1,10 +1,10 @@
 import { User } from "@/models/user.model";
-import { Router, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { UserDocument, UserType } from "@/interfaces/IUser";
 import { SignJWT } from "jose";
 
 
-export const authRouter: Router = Router()  //mini-applications
+// export const authRouter: Router = Router()  //mini-applications
 
 interface SignUpRequestBody {
     email: string;
@@ -32,9 +32,7 @@ export const signup = async function signUp(req: Request<{}, {}, SignUpRequestBo
         }
 
         await User.create({ email, name, password, userType });
-        console.log(email)
-        console.log(name)
-        console.log(userType)
+        
 
         res.status(201).json({ message: 'User created' });
 
