@@ -1,7 +1,9 @@
 import {Router } from 'express';
-import { checkAdmin } from '@/controllers/adminController';
-const adminRouter: Router = Router()
+import { addNewProduct, checkAdmin } from '@/controllers/adminController';
+// import verifyJw
+export const adminRouter: Router = Router()
 
 adminRouter.use(checkAdmin)
 
+adminRouter.post("/addNewProduct",addNewProduct)
 

@@ -1,8 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { authRouter } from './auth';
+import { adminRouter } from './admin';
 import { DecodedJWT } from '@/interfaces/IUser';
-export const router: Router = Router()
 import { jwtVerify } from 'jose';
+
+export const router: Router = Router()
 
 router.use("/auth", authRouter);
 
@@ -15,14 +17,14 @@ router.use(
                 res.status(401).json({ message: "No authorization header" });
                 return
             }
-            // 1. Prepare the secret (must be Uint8Array)
+            // Prepare the secret (must be Uint8Array)
             const secret = new TextEncoder().encode("MY_SECRET");
 
-            // 2. Verify with jose (async/await required)
+            // Verify with jose (async/await required)
             const token = authHeader.split(" ")[1];
             const { payload } = await jwtVerify(token, secret);
 
-            // 3. Type assertion (if using TypeScript)
+            // Type assertion (if using TypeScript)
             req.decoded = payload as DecodedJWT;
 
             next()
@@ -33,5 +35,7 @@ router.use(
 
 
     })
+
+router.use("/admin", adminRouter);
 
 
