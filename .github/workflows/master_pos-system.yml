@@ -1,52 +1,77 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - pos-system
+name: Build and deploy POS system to Azure
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+      # Frontend installation and build
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
 
-      - name: Upload artifact for deployment job
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build  # This should create static files in /frontend/dist or /frontend/build
+
+      # Backend installation
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Prepare deployment package
+        run: |
+          mkdir -p deployment
+          # Copy frontend build files
+          cp -r frontend/dist deployment/public || cp -r frontend/build deployment/public
+          # Copy backend files
+          cp -r backend deployment/backend
+          # Create combined package.json
+          echo '{
+            "name": "pos-system",
+            "version": "1.0.0",
+            "scripts": {
+              "start": "node backend/server.js",
+              "build": "cd frontend && npm install && npm run build",
+              "install-all": "npm install --prefix frontend && npm install --prefix backend"
+            },
+            "engines": {
+              "node": "18.x"
+            }
+          }' > deployment/package.json
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
-          path: .
+          name: pos-system
+          path: deployment
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write
+      contents: read
 
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: node-app
+          name: pos-system
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -55,11 +80,9 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DF0A626CF4774254982B34C6184A737C }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B9C96DEAF1FC4A3CA4F85D252B36A529 }}
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'pos-system'
           slot-name: 'Production'
           package: .
-          
