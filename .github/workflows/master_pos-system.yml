@@ -1,88 +1,72 @@
-name: Build and deploy POS system to Azure
+name: Deploy POS System
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
+env:
+  NODE_VERSION: '22.x'
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: ${{ env.NODE_VERSION }}
 
-      # Frontend installation and build
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: npm install
-
+      # Frontend Build (Next.js)
       - name: Build frontend
         working-directory: ./frontend
-        run: npm run build  # This should create static files in /frontend/dist or /frontend/build
+        run: |
+          npm install
+          npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://${{ vars.AZURE_WEBAPP_NAME }}.azurewebsites.net
 
-      # Backend installation
-      - name: Install backend dependencies
+      # Backend Build
+      - name: Build backend
         working-directory: ./backend
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
-      - name: Prepare deployment package
+      # Prepare Deployment Package
+      - name: Create deployment package
         run: |
           mkdir -p deployment
-          # Copy frontend build files
-          cp -r frontend/dist deployment/public || cp -r frontend/build deployment/public
-          # Copy backend files
-          cp -r backend deployment/backend
-          # Create combined package.json
+          
+          # Frontend (Next.js standalone output)
+          cp -r frontend/.next/standalone deployment/
+          cp -r frontend/public deployment/public
+          cp -r frontend/.next/static deployment/.next/static
+          
+          # Backend
+          cp -r backend/dist deployment/backend
+          cp backend/package.json deployment/backend/
+          
+          # Combined package.json
           echo '{
             "name": "pos-system",
             "version": "1.0.0",
             "scripts": {
-              "start": "node backend/server.js",
-              "build": "cd frontend && npm install && npm run build",
-              "install-all": "npm install --prefix frontend && npm install --prefix backend"
+              "start": "node backend/index.js",
+              "install-all": "(cd frontend && npm install); (cd backend && npm install)"
             },
+            "dependencies": {},
             "engines": {
-              "node": "18.x"
+              "node": "${{ env.NODE_VERSION }}"
             }
           }' > deployment/package.json
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pos-system
-          path: deployment
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: pos-system
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CC020612241146958FB38017DE47A241 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DF0A626CF4774254982B34C6184A737C }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B9C96DEAF1FC4A3CA4F85D252B36A529 }}
-
-      - name: Deploy to Azure Web App
+      # Deploy to Azure
+      - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'pos-system'
-          slot-name: 'Production'
-          package: .
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          package: ./deployment
