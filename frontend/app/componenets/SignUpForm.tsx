@@ -1,6 +1,6 @@
 "use client"
 import { FormEvent } from "react"
-import { UserType, formDataType } from "@/interfaces/authInterface"
+import { formDataType } from "@/interfaces/authInterface"
 interface SignUpFormProps {
   formData: formDataType
   isLoading: boolean

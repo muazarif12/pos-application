@@ -5,7 +5,7 @@ interface AuthTabsProps {
   setIsSignUp: (value: boolean) => void
 }
 
-export function AuthTabs({ isSignUp, setIsSignUp }: AuthTabsProps) {
+export function AuthTabs({ setIsSignUp }: AuthTabsProps) {
   return (
     <div style={{ display: 'flex', gap: '3rem', marginBottom: "3rem" }}>
       <button onClick={() => setIsSignUp(false)}>SignIn</button>
