@@ -1,16 +1,6 @@
 import { jwtDecode } from "jwt-decode";
-export enum UserType {
-    ADMIN = 'admin',
-    CASHIER = 'cashier'
-}
+import { DecodedToken } from "@/interfaces/authInterface";
 
-export interface DecodedToken {
-    email: string;
-    createdAt: Date;
-    userType: UserType;
-    exp: number;
-
-}
 
 export const decodeToken = (token: string | null): DecodedToken | null => {
     if (!token) return null

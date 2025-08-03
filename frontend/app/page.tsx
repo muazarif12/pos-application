@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { formDataType, UserType, apiResponseType } from "./interfaces/authInterface"
+import { formDataType, UserType, ApiResponseType } from "./interfaces/authInterface"
 import { authService } from "./services/auth";
 import { AxiosError } from "axios";
 import { decodeToken } from "./utils/auth";
@@ -9,7 +9,7 @@ export default function Home() {
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [apiResponse, setApiResponse] = useState<apiResponseType>({
+  const [apiResponse, setApiResponse] = useState<ApiResponseType>({
     message: "",
     token: ""
   })
@@ -32,7 +32,7 @@ export default function Home() {
     setApiResponse({ message: "", token: "" })
     setIsLoading(true)
 
-    let response: apiResponseType
+    let response: ApiResponseType
 
     try {
 
