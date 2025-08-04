@@ -1,5 +1,6 @@
 import axios from "axios"
 import { UserType } from "@/interfaces/authInterface";
+
 const API_URL = 'http://localhost:5600/auth';
 
 export const authService = {
@@ -21,7 +22,6 @@ export const authService = {
         return response.data;
     }
 };
-
 
 
 
