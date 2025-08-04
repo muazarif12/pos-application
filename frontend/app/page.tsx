@@ -1,8 +1,8 @@
 "use client"
 import { useAuth } from "./hooks/useAuth"
-import { SignInForm } from "./componenets/SignInForm"
-import { AuthTabs } from "./componenets/AuthTab"
-import { SignUpForm } from "./componenets/SignUpForm"
+import { SignInForm } from "./componenets/authentication/SignInForm"
+import { AuthTabs } from "./componenets/authentication/AuthTab"
+import { SignUpForm } from "./componenets/authentication/SignUpForm"
 
 export default function Home() {
   const {

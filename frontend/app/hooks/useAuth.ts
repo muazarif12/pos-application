@@ -4,8 +4,8 @@ import { authService } from "@/services/auth"
 import { AxiosError } from "axios"
 import { decodeToken } from "@/utils/auth"
 import { useRouter } from "next/navigation"
-
 export function useAuth() {
+  
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiResponse, setApiResponse] = useState<ApiResponseType>({
@@ -13,6 +13,7 @@ export function useAuth() {
     token: ""
   })
   const [isSignUp, setIsSignUp] = useState<boolean>(false)
+
   const [formData, setFormData] = useState<formDataType>({
     name: "",
     email: "",

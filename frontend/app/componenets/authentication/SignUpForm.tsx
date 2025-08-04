@@ -1,6 +1,7 @@
 "use client"
 import { FormEvent } from "react"
 import { formDataType } from "@/interfaces/authInterface"
+
 interface SignUpFormProps {
   formData: formDataType
   isLoading: boolean
@@ -10,6 +11,7 @@ interface SignUpFormProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
   handleSubmit: (e: FormEvent) => Promise<void>
 }
+
 
 export function SignUpForm({
   formData,
@@ -24,6 +26,7 @@ export function SignUpForm({
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <label htmlFor="name">Name</label>
           <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} />
+
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between" }}>
