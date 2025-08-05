@@ -5,7 +5,7 @@ import { AxiosError } from "axios"
 import { decodeToken } from "@/utils/auth"
 import { useRouter } from "next/navigation"
 export function useAuth() {
-  
+
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiResponse, setApiResponse] = useState<ApiResponseType>({
@@ -41,7 +41,7 @@ export function useAuth() {
         response = await authService.signIn({ email: formData.email, password: formData.password })
         setApiResponse({ message: response.message, token: response.token })
         const decodedToken = decodeToken(response.token as string)
-        
+
         if (decodedToken) {
           const userType: UserType = decodedToken.userType
           switch (userType) {
@@ -66,7 +66,16 @@ export function useAuth() {
     } finally {
       setIsLoading(false)
     }
+
+
   }
+  const handleLogout: React.MouseEventHandler<HTMLButtonElement> = () => {
+    // Clear the cookie (match original cookie settings)
+    document.cookie = 'authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Secure; SameSite=Strict';
+
+    // Redirect
+    router.push("/");
+  };
 
   return {
     isLoading,
@@ -75,7 +84,8 @@ export function useAuth() {
     formData,
     setIsSignUp,
     handleChange,
-    handleSubmit
+    handleSubmit,
+    handleLogout
   }
 
 
