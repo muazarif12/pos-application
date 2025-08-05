@@ -3,14 +3,14 @@ export enum UserType{
     CASHIER = 'cashier'
 }
 
-export interface formDataType {
+export interface authFormDataType {
   email: string,
   name: string,
   password: string,
   userType: UserType
 }
 
-export interface ApiResponseType {
+export interface AuthApiResponseType {
   message: string;
   token?: string;
 }

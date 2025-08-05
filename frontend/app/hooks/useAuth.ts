@@ -1,20 +1,22 @@
 import { useState } from "react"
-import { formDataType, UserType, ApiResponseType } from "@/interfaces/authInterface"
+import { authFormDataType, UserType, AuthApiResponseType } from "@/interfaces/authInterface"
 import { authService } from "@/services/auth"
 import { AxiosError } from "axios"
 import { decodeToken } from "@/utils/auth"
 import { useRouter } from "next/navigation"
+import Cookies from 'js-cookie';
+
 export function useAuth() {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [apiResponse, setApiResponse] = useState<ApiResponseType>({
+  const [apiResponse, setApiResponse] = useState<AuthApiResponseType>({
     message: "",
     token: ""
   })
   const [isSignUp, setIsSignUp] = useState<boolean>(false)
 
-  const [formData, setFormData] = useState<formDataType>({
+  const [formData, setFormData] = useState<authFormDataType>({
     name: "",
     email: "",
     password: "",
@@ -32,7 +34,7 @@ export function useAuth() {
     setIsLoading(true)
 
     try {
-      let response: ApiResponseType
+      let response: AuthApiResponseType
 
       if (isSignUp) {
         response = await authService.signUp(formData)
@@ -71,8 +73,8 @@ export function useAuth() {
   }
   const handleLogout: React.MouseEventHandler<HTMLButtonElement> = () => {
     // Clear the cookie (match original cookie settings)
-    document.cookie = 'authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Secure; SameSite=Strict';
-
+    localStorage.removeItem('authToken');
+    Cookies.remove('authToken');
     // Redirect
     router.push("/");
   };

@@ -85,14 +85,6 @@ export const signIn = async function signIn(req: Request, res: Response): Promis
             .sign(secret); 
 
 
-        // Set cookie
-        res.cookie('authToken', token, {
-            httpOnly: false,  // Done false for checking at localhost
-            secure: false, // HTTPS only in production
-            sameSite: 'strict',
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
-        });
-
         res.status(200).json({ message: "Logged In", token });
 
     }

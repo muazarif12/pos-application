@@ -35,16 +35,16 @@ export const getProducts = async function (req: Request, res: Response): Promise
 }
 
 export const createProduct = async function (req: Request, res: Response): Promise<void> {
-    const { id, name, price, sku, category, stock, costPrice } = req.body
+    const { name, price, sku, category, stock, costPrice } = req.body
 
     try {
-        const newProduct: IProduct | null = await Product.findOne({ id });
+        const newProduct: IProduct | null = await Product.findOne({ name });
         if (newProduct) {
             res.status(409).json({ message: 'Product already exists.' })
             return
         }
 
-        await Product.create({ id, name, price, sku, category, stock, costPrice });
+        await Product.create({ name, price, sku, category, stock, costPrice });
         res.status(201).json({ message: 'Product added' })
     }
 

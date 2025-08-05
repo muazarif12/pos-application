@@ -4,7 +4,10 @@ import { jwtVerify } from 'jose';
 
 export async function middleware(request: NextRequest) {
 
-    const token = request.cookies.get('authToken')?.value;
+    const authHeader = request.headers.get('Authorization');
+    console.log(`${authHeader} autheader`)
+    const token = request.cookies.get('authToken')?.value; // Extract "Bearer <token>"
+
     if (!token) {
         return NextResponse.redirect(new URL('/', request.url));
     }
