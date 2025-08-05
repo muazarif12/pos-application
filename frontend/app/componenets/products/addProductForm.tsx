@@ -5,18 +5,18 @@ interface AddProductFormProps{
 }
 export function AddProductForm({onClose}: AddProductFormProps ) {
 
-const modelRef = useRef<HTMLDivElement>(null)
+const modalRef = useRef<HTMLDivElement>(null)
 
 const closeModal = (e:React.MouseEvent<HTMLDivElement>) => {
     console.log("Clicked element:", e.target);
-    console.log("Modal ref element:", modelRef.current);
-    if(modelRef.current === e.target){
+    console.log("Modal ref element:", modalRef.current);
+    if(modalRef.current === e.target){
         onClose();
     }
 }
     return (
 
-        <div ref={modelRef}
+        <div ref={modalRef}
             onClick={closeModal}
             style={{
                 position: 'fixed',
