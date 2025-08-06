@@ -12,10 +12,10 @@ export const checkCashier = async function (req: Request, res: Response, next: N
 
 }
 
-export const getProduct = async function (req: Request, res: Response): Promise<void> {
+export const getProductByName = async function (req: Request, res: Response): Promise<void> {
 
     try {
-        const {name} = req.body
+        const {name} = req.params
         const product: IProduct | null = await Product.findOne({name})
 
         if (!product) {
