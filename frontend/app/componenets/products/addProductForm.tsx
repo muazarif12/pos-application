@@ -5,7 +5,7 @@ import { useRef } from 'react';
 interface AddProductFormProps { onClose: () => void }
 
 export function AddProductForm({ onClose }: AddProductFormProps) {
-    const { isLoading, apiResponse, formData,handleChange,handleSubmit } = useAddProduct()
+    const { isLoading, apiResponse, formData, handleChange, handleSubmit } = useAddProduct()
 
     const modalRef = useRef<HTMLDivElement>(null)
 
@@ -47,7 +47,7 @@ export function AddProductForm({ onClose }: AddProductFormProps) {
                         <label htmlFor="costPrice">Cost Price</label>
                         <input type="text" id="costPrice" name="costPrice" required value={formData.costPrice} onChange={handleChange}/>
                     </div>
-                    <button type='submit' disabled={isLoading}> Add Button</button>
+                    <button type='submit' disabled={isLoading}> Add Product</button>
                     <div style={{ marginTop: "1rem" }}>{apiResponse.message}</div>
 
                 </div>

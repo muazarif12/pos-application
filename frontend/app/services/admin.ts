@@ -33,4 +33,15 @@ export const adminService = {
     
     return response.data;
   },
+
+  async getProducts(){
+    const response = await axios.get(
+      `${API_URL}/admin/getProducts`,
+      {
+        headers: getAuthHeader()
+      }
+    )
+    return response.data
+  }
 };
+

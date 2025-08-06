@@ -25,7 +25,7 @@ export const getProducts = async function (req: Request, res: Response): Promise
             response.status(404).json({ message: "No Products Found" })
         }
 
-        res.status(200).json(productArray)
+        res.status(200).json({message:"Following are the products", productArray})
 
     } catch
     (error) {

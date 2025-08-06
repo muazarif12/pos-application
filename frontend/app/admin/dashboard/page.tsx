@@ -2,13 +2,14 @@
 import { useAuth } from "@/hooks/useAuth";
 import { AddProductForm } from "@/componenets/products/addProductForm";
 import { useState } from "react";
-import { Box, Button, Typography, Container, Paper, IconButton } from '@mui/material';
+import { Box, Button, Typography, Container, Paper, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Logout, Add } from '@mui/icons-material';
+import { useGetProducts } from "@/hooks/useGetProducts";
 
-import { useAddProduct } from "@/hooks/useAddProduct";
 export default function AdminDashboard() {
-  const { handleLogout } = useAuth()
-  const [showModel, setShowModal] = useState<boolean>(false)
+  const { handleLogout } = useAuth();
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const { products, isLoading } = useGetProducts();
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -47,26 +48,42 @@ export default function AdminDashboard() {
             Add Product
           </Button>
 
-          {showModel && (
+          {showModal && (
             <AddProductForm
               onClose={() => setShowModal(false)}
             />
           )}
 
-          {/* Placeholder for product list - you should implement this */}
-          <Box
-            sx={{
-              p: 2,
-              border: 1,
-              borderColor: 'divider',
-              borderRadius: 1,
-              backgroundColor: 'background.paper'
-            }}
-          >
-            <Typography color="text.secondary">
-              Product list will appear here
-            </Typography>
-          </Box>
+          {isLoading ? (
+            <Box display="flex" justifyContent="center" py={4}>
+              <Typography>Loading products...</Typography>
+            </Box>
+          ) : (
+            <TableContainer component={Paper} elevation={0}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="right">Price</TableCell>
+                    <TableCell>SKU</TableCell>
+                    <TableCell>Category</TableCell>
+                    <TableCell align="right">Stock</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {products.map((product) => (
+                    <TableRow key={product._id}>
+                      <TableCell>{product.name}</TableCell>
+                      <TableCell align="right">${product.price.toFixed(2)}</TableCell>
+                      <TableCell>{product.sku}</TableCell>
+                      <TableCell>{product.category}</TableCell>
+                      <TableCell align="right">{product.stock}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Box>
       </Paper>
     </Container>
