@@ -1,6 +1,18 @@
 "use client"
 import { FormEvent } from "react"
 import { authFormDataType } from "@/interfaces/authInterface"
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Container,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material"
 
 interface SignUpFormProps {
   formData: authFormDataType

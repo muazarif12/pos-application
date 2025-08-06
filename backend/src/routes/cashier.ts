@@ -1,9 +1,12 @@
 import {Router } from 'express';
 import { checkCashier } from '@/controllers/cashierController';
-const adminRouter: Router = Router()
+import { getProduct } from '@/controllers/cashierController';
+export const cashierRouter: Router = Router()
 
 
 
-adminRouter.use(checkCashier)
+cashierRouter.use(checkCashier)
+
+cashierRouter.get("/getProduct",getProduct)
 
 

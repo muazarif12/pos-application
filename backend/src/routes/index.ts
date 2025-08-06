@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { authRouter } from './auth';
 import { adminRouter } from './admin';
+import { cashierRouter } from './cashier';
 import { DecodedJWT } from '@/interfaces/IUser';
 import { jwtVerify } from 'jose';
 
@@ -37,5 +38,6 @@ router.use(
     })
 
 router.use("/admin", adminRouter);
+router.use("/cashier",cashierRouter)
 
 
