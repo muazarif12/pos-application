@@ -18,21 +18,35 @@ export const useCheckout = () => {
         }
         setLoading(true)
         setError('Input is empty')
+        try {
+            const response = await cashierService.getProductByName(productNameInput.trim());
+            const newProduct = response.data.product;
 
+            if (newProduct) {
+                // Update the products array with the new product
+                const updatedProducts = [...products, newProduct];
+                setProducts(updatedProducts);
 
+                // Recalculate the total cost
+                const newTotalCost = updatedProducts.reduce((acc, product) => acc + product.price, 0);
+                setTotalCost(newTotalCost);
+            }
 
-        const response = cashierService.getProductByName(productNameInput.trim());
-        // const newProduct = response.data.product;
-        console.log("Full API response object:", response); // 🚀 This will print the object
-        
-
+        } catch (err) {
+            console.error(err);
+            setError("Product not found or an error occurred.");
+        } finally {
+            setLoading(false);
+            // Clear the input field for the next entry
+            setProductNameInput('');
+        }
     }
 
     return {
-    
+
         addProduct
-            
-        
+
+
     }
 }
 
