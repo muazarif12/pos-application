@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
-import { Product } from '@/interfaces/checkOutInterface'
-import { Axios, AxiosError } from 'axios'
+import { checkOutApiResponseType, Product } from '@/interfaces/checkOutInterface'
+import { AxiosError } from "axios"
 import { cashierService } from '@/services/cashier'
 
 export const useCheckout = () => {
@@ -11,43 +11,50 @@ export const useCheckout = () => {
     const [totalCost, setTotalCost] = useState<number>(0)
     const [productNameInput, setProductNameInput] = useState<string>('')
     const [error, setError] = useState('')
+    const [apiResponse, setApiResponse] = useState<checkOutApiResponseType>()
 
     const addProduct = async () => {
         if (!productNameInput.trim()) {
             return
         }
+
+
         setLoading(true)
-        setError('Input is empty')
+        setError('')
+
         try {
-            const response = await cashierService.getProductByName(productNameInput.trim());
-            const newProduct = response.data.product;
+            const response = await cashierService.getProductByName(productNameInput.trim())
+            const newProduct = response.data.product
+            setApiResponse({ message: response.data.message, name: response.data.product.name, price: response.data.product.price })
 
             if (newProduct) {
-                // Update the products array with the new product
-                const updatedProducts = [...products, newProduct];
-                setProducts(updatedProducts);
+                const updatedProducts = [...products, newProduct]
+                setProducts(updatedProducts)
 
-                // Recalculate the total cost
                 const newTotalCost = updatedProducts.reduce((acc, product) => acc + product.price, 0);
                 setTotalCost(newTotalCost);
             }
 
-        } catch (err) {
-            console.error(err);
-            setError("Product not found or an error occurred.");
-        } finally {
-            setLoading(false);
-            // Clear the input field for the next entry
-            setProductNameInput('');
         }
+        catch (error) {
+            const axiosError = error as AxiosError<{ message?: string }>
+            setApiResponse({ message: axiosError.response?.data?.message || "Product not added in checkout" })
+        }
+        finally {
+            setLoading(false)
+            setProductNameInput('')
+        }
+        
     }
-
     return {
-
-        addProduct
-
-
-    }
+            addProduct,
+            loading,
+            products,
+            totalCost,
+            productNameInput,
+            setProductNameInput,
+            error,
+            apiResponse
+        }
 }
-
 

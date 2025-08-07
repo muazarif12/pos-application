@@ -14,7 +14,7 @@ export const cashierService = {
   // Correctly use a GET request with params
   async getProductByName(name: string) {
     const response = await axios.get(
-      `${API_URL}/admin/getProduct/${name}`, // Assuming this is your new endpoint
+      `${API_URL}/cashier/getProduct/${name}`, // Assuming this is your new endpoint
       {
         headers: getAuthHeader(),
       }

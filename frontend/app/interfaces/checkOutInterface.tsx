@@ -9,3 +9,9 @@ export interface Product {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface checkOutApiResponseType {
+  message: string;
+  name?: string;
+  price?: number
+}
